@@ -1,1 +1,1 @@
-# community-structure-validation
+# community structure validation
