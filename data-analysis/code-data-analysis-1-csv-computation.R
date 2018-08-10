@@ -1,4 +1,3 @@
-
 library(igraph)
 library(Matrix)
 source('B-one-tailed-neat.R')

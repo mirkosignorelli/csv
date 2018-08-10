@@ -1,4 +1,3 @@
-
 load('results.RData')
 
 rownames(absolute_csv) = names(adjlist)
