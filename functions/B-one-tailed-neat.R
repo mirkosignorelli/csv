@@ -192,7 +192,6 @@ pvalue_1tailed = function(x, ss, K, N, type = c('over','under')) {
   return(pval)
 }
 
-
 library(compiler)
 neat_1tailed = cmpfun(neat_1tailed)
 pvalue_1tailed = cmpfun(pvalue_1tailed)

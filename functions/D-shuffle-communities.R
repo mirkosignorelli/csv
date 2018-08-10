@@ -1,4 +1,3 @@
-
 shuffle_groups = function(groups, proportion) {
   if (proportion < 0 | proportion > 1) {
     warning('Proportion should be in [0,1]')
