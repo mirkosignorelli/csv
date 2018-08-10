@@ -1,4 +1,3 @@
-
 library(igraph)
 library(neat)
 library(mclust)

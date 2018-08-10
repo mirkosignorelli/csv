@@ -1,4 +1,3 @@
-
 library(igraph)
 library(neat)
 source('A-dcblockmodel-functions.R')
