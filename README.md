@@ -2,7 +2,7 @@
 
 Data and code to reproduce the simulations and data analysis presented in:
 
-Cutillo, L., & Signorelli, M. (2018). An inferential procedure for community structure validation in networks. arXiv preprint arXiv:1710.06611.
+Cutillo, L., & Signorelli, M. (2018). On community structure validation in real networks. arXiv preprint arXiv:1710.06611.
 
 This folder comprises 3 subfolders:
 
@@ -10,4 +10,4 @@ This folder comprises 3 subfolders:
 
 - simulations contains the code used for the simulations in Section 4 of the manuscript;
 
-- data analysis contains the code used in the data analyses presented in Section 5.
+- applications contains the code used in the example applications presented in Section 5.
