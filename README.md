@@ -2,7 +2,7 @@
 
 Data and code to reproduce the simulations and data analysis presented in:
 
-Signorelli, M., Cutillo, L.. On community structure validation in real networks. arXiv preprint arXiv:1710.06611.
+Signorelli, M., Cutillo, L. (in review). On community structure validation in real networks.
 
 This folder comprises 3 subfolders:
 
