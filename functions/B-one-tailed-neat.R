@@ -7,12 +7,12 @@ neat_1tailed = function(alist, blist = NULL, network, nettype, nodes,
   if ((nettype %in% c('directed','undirected')) == FALSE) stop("nettype must be either 'directed' or 'undirected' ")
   if (nettype == 'directed' & is.null(blist)) stop("blist cannot be null when nettype == 'directed' (see manual)")
   # first case: igraph object
-  if (class(network) == 'igraph') { 
+  if (inherits(network, 'igraph')) { 
     requireNamespace("igraph", quietly = TRUE)
     net = networkmatrix(network, nodes, nettype)
   }
   # second case A: adjacency matrix
-  else if (class(network) == "matrix" & ncol(network)>2) {
+  else if (inherits(network, 'matrix') & ncol(network)>2) {
     if (isSymmetric(network)==TRUE & nettype == 'directed') {
       warning('The adjacency matrix is symmetric. Should you set nettype = "undirected"?')
     }
@@ -22,20 +22,21 @@ neat_1tailed = function(alist, blist = NULL, network, nettype, nodes,
     net = networkmatrix(network, nodes, nettype)
   }
   # second case B: sparse adjacency matrix (class "dgCMatrix")
-  else if (class(network) == "dgCMatrix") {
+  else if (inherits(network, 'dgCMatrix')) {
     requireNamespace("Matrix", quietly = TRUE)
     net = networkmatrix(network, nodes, nettype)
   }
   # third case: two-column matrix with labels
-  else if (class(network) == "matrix" & ncol(network)==2) net=network 
+  else if (inherits(network, 'matrix') & ncol(network)==2) net=network 
   # NB: from this point on, 'net' is the network matrix to be used!!!
   if (is.factor(nodes) == T) {nodes = as.character(nodes)}
   oa = numeric(); ib = numeric(); nab = numeric() 
   alogic = vector("list", length(alist))
   netred = vector("list", length(alist))
   p = numeric(); expect=numeric()
-  from = vector(); to = vector()
-  min = vector(); max = vector()
+  from = to = vector()
+  min = max = vector()
+  ss = K = N = vector()
   # UNDIRECTED NETWORKS:
   if (nettype == 'undirected') {
     eina = vector("list", length(alist))
@@ -84,6 +85,9 @@ neat_1tailed = function(alist, blist = NULL, network, nettype, nodes,
           p[k] = pvalue_1tailed(nab[k], ss = oa[i], K = ib[j], N = 2*dim(net)[1], type = type)
           min[k] = max(0,oa[i]+ib[j]-2*dim(net)[1])
           max[k] = min(oa[i],ib[j])
+          ss[k] = oa[i]
+          K[k] = ib[j]
+          N[k] = 2*dim(net)[1]
           expect[k] = round(ib[j] * oa[i] / (2*dim(net)[1]), 4)
           k = k+1
         }
@@ -102,6 +106,9 @@ neat_1tailed = function(alist, blist = NULL, network, nettype, nodes,
           p[k] = pvalue_1tailed(nab[k], ss = oa[i], K = ib[j], N = 2*dim(net)[1], type = type)
           min[k] = max(0,oa[i]+ib[j]-2*dim(net)[1])
           max[k] = min(oa[i],ib[j])
+          ss[k] = oa[i]
+          K[k] = ib[j]
+          N[k] = 2*dim(net)[1]
           expect[k] = round(ib[j] * oa[i] / (2*dim(net)[1]), 4)
           k = k+1
         }
@@ -136,8 +143,11 @@ neat_1tailed = function(alist, blist = NULL, network, nettype, nodes,
           to[k] = names(blist)[j]
           nab[k] = sum( netred[[i]][,2] %in%  blist[[j]])
           p[k] = pvalue_1tailed(nab[k], ss = oa[i], K = ib[j], N = dim(net)[1], type = type)
-          min[k] = max(0,oa[i]+ib[j]-dim(net)[1])
-          max[k] = min(oa[i],ib[j])
+          min[k] = max(0, oa[i]+ib[j]-dim(net)[1])
+          max[k] = min(oa[i], ib[j])
+          ss[k] = oa[i]
+          K[k] = ib[j]
+          N[k] = dim(net)[1]
           expect[k] = round(ib[j] * oa[i] / dim(net)[1], 4)
           k = k+1
         }
@@ -145,10 +155,11 @@ neat_1tailed = function(alist, blist = NULL, network, nettype, nodes,
     }
   } # end of part for directed networks
   # final common code - MODIFIED FROM ORIGINAL PACKAGE
-  results = data.frame(from, to, nab, expect, p, min, max)
+  results = data.frame(from, to, nab, expect, p, 
+                       min, max, ss, K, N)
   names(results) = c('A', 'B', 'nab', 'expected_nab', 'pvalue', 
-                       'min', 'max')
-  class(results)=c('neat','data.frame')
+                       'min', 'max', 'ss', 'K', 'N')
+  class(results) = c('neat','data.frame')
   results
 }
 
@@ -157,20 +168,20 @@ networkmatrix = function(network, nodes, nettype) {
   if ((nettype %in% c('directed','undirected')) == FALSE) stop("nettype must be either 'directed' or 'undirected' ")
   requireNamespace("igraph", quietly = TRUE)
   # adjacency matrix: first converted to igraph
-  if (class(network) == 'matrix' & nettype == 'directed') {
+  if (inherits(network, 'matrix') & nettype == 'directed') {
     colnames(network) = nodes
     network = igraph::graph.adjacency(network,"directed", diag=F)
   }
-  if (class(network) == 'matrix' & nettype == 'undirected') {
+  if (inherits(network, 'matrix') & nettype == 'undirected') {
     colnames(network) = nodes
     network = igraph::graph.adjacency(network,"undirected", diag=F)
   }
   # then, get edgelist from igraph
-  if (class(network)==c('igraph')) {
+  if (inherits(network, 'igraph')) {
     if (is.null(igraph::V(network)$name)) igraph::V(network)$name = nodes
     output = igraph::get.edgelist(network, names = T)
   }
-  else if (class(network) == "dgCMatrix") {
+  else if (inherits(network, "dgCMatrix")) {
     requireNamespace("Matrix", quietly = TRUE)
     indexes = as.matrix(Matrix::summary(network))
     output = matrix(nrow = dim(indexes)[1], ncol = 2)
@@ -191,6 +202,7 @@ pvalue_1tailed = function(x, ss, K, N, type = c('over','under')) {
   if (type == 'under') pval = p2 + p3/2
   return(pval)
 }
+
 
 library(compiler)
 neat_1tailed = cmpfun(neat_1tailed)
