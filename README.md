@@ -1,4 +1,4 @@
-# Community structure validation
+# On community structure validation in real networks
 
 Data and code to reproduce the simulations and data analysis presented in:
 
