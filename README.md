@@ -1,8 +1,10 @@
 # On community structure validation in real networks
 
-Data and code to reproduce the simulations and data analysis presented in:
+Data and `R` code to implement the statistical methodology, and reproduce the simulations and data analysis, presented in:
 
-Signorelli, M., Cutillo, L. (in press). On community structure validation in real networks. To appear in *Computational Statistics*, [arXiv preprint number: 1710.06611](https://arxiv.org/abs/1710.06611)
+Signorelli, M., Cutillo, L. (2021). On community structure validation in real networks. *Computational Statistics*.
+
+You can read and download the paper (with open access) here: https://doi.org/10.1007/s00180-021-01156-6
 
 This repository comprises 3 subfolders:
 
