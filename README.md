@@ -2,7 +2,7 @@
 
 Data and `R` code to implement the statistical methodology, and reproduce the simulations and data analysis, presented in:
 
-Signorelli, M., Cutillo, L. (2021). On community structure validation in real networks. *Computational Statistics*.
+Signorelli, M., Cutillo, L. (2022). On community structure validation in real networks. *Computational Statistics*, 37, 1165–1183.
 
 You can read and download the paper (with open access) here: https://doi.org/10.1007/s00180-021-01156-6
 
